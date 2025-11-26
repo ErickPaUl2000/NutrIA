@@ -12,7 +12,7 @@ st.set_page_config(
 )
 
 st.title('NutrIA: Tu Asesor Nutricional con IA')
-st.markdown("Usa la IA de Gemini para generar planes de comidas, analizar recetas y obtener consejos dietéticos personalizados.")
+st.markdown("Usa la IA para generar planes de comidas, analizar recetas y obtener consejos dietéticos personalizados.")
 st.divider()
 
 #Configuración de la IA
@@ -196,4 +196,5 @@ if archivos_guardados:
             st.subheader(f"Contenido de: {plan_seleccionado}")
             st.markdown(contenido_plan)
 else:
+
     st.info("Aún no tienes planes guardados. ¡Genera uno y guárdalo!")
