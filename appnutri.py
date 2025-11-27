@@ -64,18 +64,27 @@ def gen_cont_nutri(prompt_usuario):
 st.sidebar.header('Mis Parámetros')
 
 #Campos de entrada
-objetivo = st.sidebar.selectbox(
-    "1. Objetivo Principal",
-    ["Perder peso", "Ganar músculo", "Mantenimiento", "Dieta saludable general"]
+objetivo = st.sidebar.text_input(
+    "1. Objetivo Nutricional"
+    )
+
+#Datos antropométricos (Edad, Talla, Peso)
+edad = st.sidebar.number_input(
+    "2. Edad (años)",
+    min_value=1, max_value=120, value=30, step=1
 )
-restricciones = st.sidebar.text_input(
-    "2. Restricciones Dietéticas / Alergias"
-    )
-alimentos_extra = st.sidebar.text_area(
-    "3. Alimentos que me gustan o que tengo disponibles"
-    )
+talla = st.sidebar.number_input(
+    "3. Talla (cm)",
+    min_value=50, max_value=300, value=170, step=1
+)
+peso = st.sidebar.number_input(
+    "4. Peso (kg)",
+    min_value=1.0, max_value=500.0, value=70.0, step=0.1, format="%.1f"
+)
+
 contexto_adicional = st.sidebar.text_input(
-    "4. Contexto (ej. rutina de ejercicios, edad)"
+    "4. Contexto (ej. rutina de ejercicios, edad)",
+    height=200
     )
 
 #Formulación del Prompt
@@ -85,8 +94,9 @@ prompt_final = (
     f"Por favor, actúa como mi asesor nutricional y genera un plan de comidas "
     f"de **3 días** basado en la siguiente información:\n\n"
     f"- **Objetivo Principal:** {objetivo}\n"
-    f"- **Restricciones/Alergias:** {restricciones}\n"
-    f"- **Alimentos a Incluir:** {alimentos_extra}\n"
+    f"- **Edad:** {edad} años\n"
+    f"- **Talla:** {talla} cm\n"
+    f"- **Peso:** {peso} kg\n"
     f"- **Contexto Adicional:** {contexto_adicional}\n\n"
     f"Para cada día, incluye Desayuno, Almuerzo, Cena y un Snack. "
     f"Aproxima las calorías y menciona el balance de macronutrientes (P/C/G)."
@@ -109,6 +119,16 @@ if st.button('Obtener Respuesta'):
     else:
         st.warning('Por favor, escribe una pregunta para la consulta libre.')
 
+# Inicializar st.session_state si no existen (necesario para el primer run)
+if 'prompt_usado' not in st.session_state:
+    st.session_state['prompt_usado'] = ''
+if 'mostrar_boton_guardar' not in st.session_state:
+    st.session_state['mostrar_boton_guardar'] = False
+if 'resultado_ia' not in st.session_state:
+    st.session_state['resultado_ia'] = ''
+if 'objetivo_actual' not in st.session_state:
+    st.session_state['objetivo_actual'] = ''
+
 #Mostrar Prompt
 if st.session_state.get('prompt_usado'):
     with st.expander('Ver prompt enviado a la IA (solo desarrollador)'):
@@ -126,7 +146,11 @@ def guardar_plan_generado(plan_texto, objetivo):
     # Genera un nombre de archivo único con fecha, hora y el objetivo
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     # Limpia el objetivo para usarlo en el nombre del archivo
-    nombre_limpio = objetivo.replace(" ", "_").replace("/", "").lower()
+    # Usar un hash simple si el objetivo es muy largo o contiene caracteres especiales complejos
+    import re
+    nombre_limpio = re.sub(r'\W+', '_', objetivo).lower()[:30] # Limita a 30 caracteres
+    if not nombre_limpio: # Si el objetivo era solo caracteres especiales
+        nombre_limpio = 'plan_personalizado'
     
     filename = f"{timestamp}_{nombre_limpio}.txt"
     filepath = os.path.join(saved_plans_dir, filename)
@@ -140,7 +164,7 @@ def guardar_plan_generado(plan_texto, objetivo):
 
 #Boton de generar
 if st.sidebar.button('General Plan Nutricional', type = 'primary'):
-    if not (objetivo and restricciones and alimentos_extra):
+    if not (objetivo and edad and talla and peso):
         st.error('Por favor, rellena todos los campos')
     else:
         resultado_ia = gen_cont_nutri(prompt_final)
@@ -179,6 +203,10 @@ try:
 except FileNotFoundError:
     st.warning(f"La carpeta '{saved_plans_dir}' aún no existe o está vacía.")
     archivos_guardados = []
+except Exception as e:
+     # Manejo de otros posibles errores de OS
+    st.error(f"Error al leer la carpeta de planes: {e}")
+    archivos_guardados = []
 
 if archivos_guardados:
     plan_seleccionado = st.selectbox(
@@ -190,11 +218,13 @@ if archivos_guardados:
         # Botón para mostrar el contenido
         if st.button(f"Abrir: {plan_seleccionado}"):
             filepath = os.path.join(saved_plans_dir, plan_seleccionado)
-            with open(filepath, "r", encoding="utf-8") as f:
-                contenido_plan = f.read()
+            try:
+                with open(filepath, "r", encoding="utf-8") as f:
+                    contenido_plan = f.read()
             
-            st.subheader(f"Contenido de: {plan_seleccionado}")
-            st.markdown(contenido_plan)
+                st.subheader(f"Contenido de: {plan_seleccionado}")
+                st.markdown(contenido_plan)
+            except Exception as e:
+                st.error(f"Error al leer el archivo: {e}")
 else:
-
     st.info("Aún no tienes planes guardados. ¡Genera uno y guárdalo!")
