@@ -69,7 +69,7 @@ objetivo = st.sidebar.text_input(
     )
 
 #Datos antropométricos (Edad, Talla, Peso)
-edad = st.sidebar.number_input(
+edad = st.sidebar.text_input(
     "2. Edad (años)"
     )
 talla = st.sidebar.number_input(
@@ -227,6 +227,7 @@ if archivos_guardados:
                 st.error(f"Error al leer el archivo: {e}")
 else:
     st.info("Aún no tienes planes guardados. ¡Genera uno y guárdalo!")
+
 
 
 
