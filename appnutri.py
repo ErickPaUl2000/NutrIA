@@ -90,16 +90,14 @@ contexto_adicional = st.sidebar.text_area(
 
 #Cración del prompt que le enviaremos a la IA
 prompt_final = (
-    f"Por favor, actúa como mi asesor nutricional y genera un plan de comidas "
-    f"de **3 días** basado en la siguiente información:\n\n"
+    f"Por favor, actúa como mi asesor nutricional y genera un tratamiento nutricional, distribución de la molécula calórica y el diagnóstico nutrición basado en la terminología de nutrición"
+    f"basado en la siguiente información:\n\n"
     f"- **Objetivo Principal:** {objetivo}\n"
     f"- **Edad:** {edad} años\n"
     f"- **Talla:** {talla} cm\n"
     f"- **Peso:** {peso} kg\n"
     f"- **Contexto Adicional:** {contexto_adicional}\n\n"
-    f"Para cada día, incluye Desayuno, Almuerzo, Cena y un Snack. "
-    f"Aproxima las calorías y menciona el balance de macronutrientes (P/C/G)."
-)
+   )
 
 #Zona de consulta libre
 
@@ -227,6 +225,7 @@ if archivos_guardados:
                 st.error(f"Error al leer el archivo: {e}")
 else:
     st.info("Aún no tienes planes guardados. ¡Genera uno y guárdalo!")
+
 
 
 
