@@ -82,7 +82,7 @@ peso = st.sidebar.number_input(
     min_value=1.0, max_value=500.0, value=70.0, step=0.1, format="%.1f"
 )
 
-contexto_adicional = st.sidebar.text_input(
+contexto_adicional = st.sidebar.text_area(
     "4. Contexto (ej. Diagnostico del paciente)",
     height=100
     )
@@ -228,5 +228,6 @@ if archivos_guardados:
                 st.error(f"Error al leer el archivo: {e}")
 else:
     st.info("Aún no tienes planes guardados. ¡Genera uno y guárdalo!")
+
 
 
