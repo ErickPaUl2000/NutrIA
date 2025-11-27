@@ -190,21 +190,29 @@ if st.session_state.get('mostrar_boton_guardar') and st.session_state.get('resul
 
 st.divider()
 
+# --- Función para crear el botón de descarga ---
+def crear_boton_descarga(filepath, filename):
+    """
+    Crea y muestra un botón de descarga para un archivo específico.
+    """
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            contenido = f.read()
+        
+        # Streamlit crea el botón usando el contenido del archivo
+        st.download_button(
+            label="Descargar Plan (TXT)",
+            data=contenido,
+            file_name=filename,
+            mime="text/plain"
+        )
+    except Exception as e:
+        st.error(f"Error al preparar la descarga del archivo: {e}")
+        
 # --- Sección de Historial de Planes ---
 st.header("📚 Historial de Planes Guardados")
 
 # Obtener todos los archivos .txt de la carpeta
-try:
-    archivos_guardados = [f for f in os.listdir(saved_plans_dir) if f.endswith('.txt')]
-    archivos_guardados.sort(reverse=True) # Mostrar el más reciente primero
-except FileNotFoundError:
-    st.warning(f"La carpeta '{saved_plans_dir}' aún no existe o está vacía.")
-    archivos_guardados = []
-except Exception as e:
-     # Manejo de otros posibles errores de OS
-    st.error(f"Error al leer la carpeta de planes: {e}")
-    archivos_guardados = []
-
 if archivos_guardados:
     plan_seleccionado = st.selectbox(
         "Selecciona un plan guardado para ver su contenido:",
@@ -212,19 +220,27 @@ if archivos_guardados:
     )
     
     if plan_seleccionado:
-        # Botón para mostrar el contenido
+        filepath = os.path.join(saved_plans_dir, plan_seleccionado)
+
+        # Botón para mostrar el contenido (mantener)
         if st.button(f"Abrir: {plan_seleccionado}"):
-            filepath = os.path.join(saved_plans_dir, plan_seleccionado)
             try:
                 with open(filepath, "r", encoding="utf-8") as f:
                     contenido_plan = f.read()
-            
+                
                 st.subheader(f"Contenido de: {plan_seleccionado}")
                 st.markdown(contenido_plan)
             except Exception as e:
                 st.error(f"Error al leer el archivo: {e}")
+                
+        # --- NUEVA LÍNEA CLAVE: Mostrar el botón de descarga ---
+        st.markdown("---")
+        st.subheader("Opciones del Plan")
+        crear_boton_descarga(filepath, plan_seleccionado) # <-- Se llama a la nueva función aquí
+        
 else:
     st.info("Aún no tienes planes guardados. ¡Genera uno y guárdalo!")
+
 
 
 
