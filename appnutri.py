@@ -129,9 +129,9 @@ if 'objetivo_actual' not in st.session_state:
     st.session_state['objetivo_actual'] = ''
 
 #Mostrar Prompt
-if st.session_state.get('prompt_usado'):
-    with st.expander('Ver prompt enviado a la IA (solo desarrollador)'):
-        st.code(st.session_state['prompt_usado'], language = 'markdown')
+#if st.session_state.get('prompt_usado'):
+    #with st.expander('Ver prompt enviado a la IA (solo desarrollador)'):
+        #st.code(st.session_state['prompt_usado'], language = 'markdown')
 
 #Directorio para guardar planes
 saved_plans_dir = 'planes_nutricionales_guardados'
@@ -227,6 +227,7 @@ if archivos_guardados:
                 st.error(f"Error al leer el archivo: {e}")
 else:
     st.info("Aún no tienes planes guardados. ¡Genera uno y guárdalo!")
+
 
 
 
