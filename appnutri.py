@@ -245,12 +245,13 @@ if archivos_guardados:
                 
         #OPCIÓN DE DESCARGA
         st.markdown("---")
-        st.subheader("descargar Plan Nutricional")
+        st.subheader("Descargar Plan Nutricional")
         # Llama a la nueva función para mostrar el botón de descarga
         crear_boton_descarga(filepath, plan_seleccionado) 
         
 else:
     st.info("Aún no tienes planes guardados. ¡Genera uno y guárdalo!")
+
 
 
 
