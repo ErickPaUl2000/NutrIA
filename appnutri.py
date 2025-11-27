@@ -84,7 +84,6 @@ peso = st.sidebar.number_input(
 
 contexto_adicional = st.sidebar.text_input(
     "4. Contexto (ej. rutina de ejercicios, edad)",
-    height=200
     )
 
 #Formulación del Prompt
@@ -228,3 +227,4 @@ if archivos_guardados:
                 st.error(f"Error al leer el archivo: {e}")
 else:
     st.info("Aún no tienes planes guardados. ¡Genera uno y guárdalo!")
+
