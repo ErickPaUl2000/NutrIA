@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state='expanded'
 )
 
-st.title('NutrIA: Tu Asesor Nutricional con IA')
+st.title('NutrIA 🦦 : Tu Asesor Nutricional con IA')
 st.markdown("Usa la IA para generar planes de comidas, analizar recetas y obtener consejos dietéticos personalizados.")
 st.divider()
 
@@ -227,6 +227,7 @@ if archivos_guardados:
                 st.error(f"Error al leer el archivo: {e}")
 else:
     st.info("Aún no tienes planes guardados. ¡Genera uno y guárdalo!")
+
 
 
 
